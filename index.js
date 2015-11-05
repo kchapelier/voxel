@@ -23,18 +23,13 @@ module.exports.generate = generate
 
 function generate(lo, hi, fn, game) {
   // To fix the display gaps, we need to pad the bounds
-  lo[0]--
-  lo[1]--
-  lo[2]--
-  hi[0]++
-  hi[1]++
-  hi[2]++
-  var dims = [hi[2]-lo[2], hi[1]-lo[1], hi[0]-lo[0]]
+  var dims = [hi[2]-lo[2]+2, hi[1]-lo[1]+2, hi[0]-lo[0]+2]
   var data = ndarray(new Uint16Array(dims[2] * dims[1] * dims[0]), dims)
+
   for (var k = lo[2]; k < hi[2]; k++)
     for (var j = lo[1]; j < hi[1]; j++)
       for(var i = lo[0]; i < hi[0]; i++) {
-        data.set(k-lo[2], j-lo[1], i-lo[0], fn(i, j, k))
+        data.set(k-lo[2]+1, j-lo[1]+1, i-lo[0]+1, fn(i, j, k))
       }
   return data
 }
@@ -65,7 +60,7 @@ module.exports.generator['Valley'] = function(i,j,k) {
 }
 
 module.exports.generator['Hilly Terrain'] = function(i,j,k) {
-  var h0 = 3.0 * Math.sin(Math.PI * i / 12.0 - Math.PI * k * 0.1) + 27;    
+  var h0 = 3.0 * Math.sin(Math.PI * i / 12.0 - Math.PI * k * 0.1) + 27;
   if(j > h0+1) {
     return 0;
   }
